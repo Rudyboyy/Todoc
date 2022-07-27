@@ -2,6 +2,7 @@ package com.cleanup.todoc.ui;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,16 +16,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.viewmodel.TodocViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -33,10 +37,13 @@ import java.util.Date;
  * @author Gaëtan HERFRAY
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+
+    private TodocViewModel todocViewModel;
+
     /**
      * List of all projects available in the application
      */
-    private final Project[] allProjects = Project.getAllProjects();
+    private List<Project> allProjects;
 
     /**
      * List of all current tasks of the application
@@ -94,6 +101,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        todocViewModel = new ViewModelProvider(this).get(TodocViewModel.class);
+
+        todocViewModel.getListProjectLiveData().observe(this, projects -> {
+            allProjects = projects;
+        });
 
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
