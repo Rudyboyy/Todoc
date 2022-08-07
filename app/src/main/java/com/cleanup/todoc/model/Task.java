@@ -19,8 +19,6 @@ import java.util.Comparator;
         childColumns = "projectId"))
 public class Task {
 
-
-
     /**
      * The unique identifier of the task
      */
@@ -40,8 +38,6 @@ public class Task {
      * The name of the task
      */
     // Suppress warning because setName is called in constructor
-    @SuppressWarnings("NullableProblems")
-    @NonNull
     private String name;
 
     public long getCreationTimestamp() {

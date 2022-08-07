@@ -18,9 +18,7 @@ import java.util.concurrent.Executors;
 public abstract class TodocDatabase extends RoomDatabase {
 
     public abstract ProjectDao projectDao();
-
-//    public abstract TaskDao taskDao(); todo
-
+    public abstract TaskDao taskDao();
     private static volatile TodocDatabase INSTANCE;
 
     private static final int NUMBER_OF_THREADS = 4;
@@ -41,7 +39,7 @@ public abstract class TodocDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback mRoomDatabaseCallBack = new RoomDatabase.Callback() {
+    private static final RoomDatabase.Callback mRoomDatabaseCallBack = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -49,8 +47,7 @@ public abstract class TodocDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 ProjectDao projectDao = INSTANCE.projectDao();
                 Project[] allProjects = Project.getAllProjects();
-                for (int i = 0; i < allProjects.length; i++) {
-                    Project current = allProjects[i];
+                for (Project current : allProjects) {
                     projectDao.createProject(current);
                 }
             });
