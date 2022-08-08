@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +27,6 @@ import com.cleanup.todoc.viewmodel.TodocViewModel;
 import com.cleanup.todoc.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -38,9 +36,7 @@ import java.util.List;
  *
  * @author Gaëtan HERFRAY
  */
-public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener { //todo rajouter l'interface , TaskProjectListener
-
-    private static final int PROJECT_ID = 1;
+public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
 
     private TodocViewModel todocViewModel;
 
@@ -53,18 +49,12 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * List of all current tasks of the application
      */
     @NonNull
-    private List<Task> tasks = new ArrayList<>(); //todo j'ai enlevé final
+    private List<Task> tasks = new ArrayList<>();
 
     /**
      * The adapter which handles the list of tasks
      */
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);//todo interface?
-
-    /**
-     * The sort method to be used to display tasks
-     */
-    @NonNull
-    private SortMethod sortMethod = SortMethod.NONE;
+    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
 
     /**
      * Dialog to create a new task
@@ -104,27 +94,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         setContentView(R.layout.activity_main);
 
-//        todocViewModel = new ViewModelProvider(this).get(TodocViewModel.class);
-////        todocViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(TodocViewModel.class); //todo rajout
-//
-//        todocViewModel.getListProjectLiveData().observe(this, projects -> {
-//            allProjects = projects;
-//        });
-//
-//        todocViewModel.getListTaskLiveData().observe(this, tasks -> {
-//            this.tasks = tasks;
-//            updateTasks();
-//        });
-//
-//        getTasks();
-//
-//        todocViewModel.getListTaskLiveData().observe(this, task -> {
-//            tasks = (ArrayList<Task>) task;
-//        });
-
-//        todocViewModel.getListTaskLiveDate().observe(this, tasks1 -> tasks1 = tasks); // todo rajout
-//        getItems();                //todo rajout
-
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
@@ -132,17 +101,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         listTasks.setAdapter(adapter);
 
         findViewById(R.id.fab_add_task).setOnClickListener(view -> showAddTaskDialog());
-    }
-
-    //todo rajout-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-
-    private void getCurrentProject() {
-        LiveData<Project> projectLiveData = todocViewModel.getCurrentProject();
-    }
-
-    private void getTasks() {
-        this.todocViewModel.getTasks(PROJECT_ID).observe(this, tasks -> this.tasks = tasks);
-        updateTasks();
     }
 
     private void initViewModel() {
@@ -157,8 +115,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         });
     }
 
-    //todo fin rajout-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actions, menu);
@@ -169,16 +125,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.filter_alphabetical) {
-            sortMethod = SortMethod.ALPHABETICAL;
-        } else if (id == R.id.filter_alphabetical_inverted) {
-            sortMethod = SortMethod.ALPHABETICAL_INVERTED;
-        } else if (id == R.id.filter_oldest_first) {
-            sortMethod = SortMethod.OLD_FIRST;
-        } else if (id == R.id.filter_recent_first) {
-            sortMethod = SortMethod.RECENT_FIRST;
-        }
-
+        todocViewModel.setSortMethod(id);
         updateTasks();
 
         return super.onOptionsItemSelected(item);
@@ -186,10 +133,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
     @Override
     public void onDeleteTask(Task task) {
-//        tasks.remove(task);
-//        this.todocViewModel.deleteTask(task.getId());                    //todo rajout
-        this.todocViewModel.deleteTask(task);                  //todo rajout
-//        updateTasks();
+        this.todocViewModel.deleteTask(task);
     }
 
     /**
@@ -214,12 +158,9 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 dialogEditText.setError(getString(R.string.empty_task_name));
             }
             // If both project and name of the task have been set
-            else if (taskProject != null) { // todo utiliser l'interface TaskProjectListener
-                // TODO: Replace this by id of persisted task
-                long id = (long) (Math.random() * 50000);
+            else if (taskProject != null) {
 
                 Task task = new Task(
-                        id,
                         taskProject.getId(),
                         taskName,
                         new Date().getTime()
@@ -232,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
                 dialogInterface.dismiss();
             }
         }
-        // If dialog is aloready closed
+        // If dialog is already closed
         else {
             dialogInterface.dismiss();
         }
@@ -264,28 +205,15 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * Updates the list of tasks in the UI
      */
-    private void updateTasks() {// todo mettre dans le ViewModel ?
+    private void updateTasks() {
         if (tasks.size() == 0) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
         } else {
             lblNoTasks.setVisibility(View.GONE);
             listTasks.setVisibility(View.VISIBLE);
-            switch (sortMethod) {
-                case ALPHABETICAL:
-                    Collections.sort(tasks, new Task.TaskAZComparator());
-                    break;
-                case ALPHABETICAL_INVERTED:
-                    Collections.sort(tasks, new Task.TaskZAComparator());
-                    break;
-                case RECENT_FIRST:
-                    Collections.sort(tasks, new Task.TaskRecentComparator());
-                    break;
-                case OLD_FIRST:
-                    Collections.sort(tasks, new Task.TaskOldComparator());
-                    break;
 
-            }
+            todocViewModel.updateTaskSortOrder(tasks);
             adapter.updateTasks(tasks);
         }
     }
@@ -329,31 +257,5 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         if (dialogSpinner != null) {
             dialogSpinner.setAdapter(adapter);
         }
-    }
-
-    /**
-     * List of all possible sort methods for task
-     */
-    private enum SortMethod {
-        /**
-         * Sort alphabetical by name
-         */
-        ALPHABETICAL,
-        /**
-         * Inverted sort alphabetical by name
-         */
-        ALPHABETICAL_INVERTED,
-        /**
-         * Lastly created first
-         */
-        RECENT_FIRST,
-        /**
-         * First created first
-         */
-        OLD_FIRST,
-        /**
-         * No sort
-         */
-        NONE
     }
 }

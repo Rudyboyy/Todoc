@@ -2,12 +2,16 @@ package com.cleanup.todoc;
 
 import static org.junit.Assert.assertTrue;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.cleanup.todoc.database.ProjectDao;
+import com.cleanup.todoc.database.TaskDao;
 import com.cleanup.todoc.database.TodocDatabase;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
@@ -24,11 +28,13 @@ import java.util.List;
 public class TaskDaoTest {
 
     private TodocDatabase database;
+    private TaskDao mTaskDao;
+    private ProjectDao mProjectDao;
     private static final long PROJECT_ID = 1;
     private static final Project PROJECT_DEMO = new Project(PROJECT_ID, "Test", 0xFFEADAD1);
-    private static final Task NEW_ITEM_PLACE_TO_VISIT = new Task(0, PROJECT_ID, "faire les tests", PROJECT_ID);
-    private static final Task NEW_ITEM_IDEA = new Task(1, PROJECT_ID, "presentation des tests", PROJECT_ID);
-    private static final Task NEW_ITEM_RESTAURANTS = new Task(2, PROJECT_ID, "execution des tests", PROJECT_ID);
+    private static final Task NEW_ITEM_PLACE_TO_VISIT = new Task(PROJECT_ID, "faire les tests", PROJECT_ID);
+    private static final Task NEW_ITEM_IDEA = new Task(PROJECT_ID, "presentation des tests", PROJECT_ID);
+    private static final Task NEW_ITEM_RESTAURANTS = new Task(PROJECT_ID, "execution des tests", PROJECT_ID);
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -40,6 +46,10 @@ public class TaskDaoTest {
                 TodocDatabase.class)
                 .allowMainThreadQueries()
                 .build();
+        /*Context context = androidx.test.core.app.ApplicationProvider.getApplicationContext();
+        database = Room.inMemoryDatabaseBuilder(context, TodocDatabase.class).build();
+        mTaskDao = database.taskDao();
+        mProjectDao = database.projectDao();*/
     }
 
     @After
