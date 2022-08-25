@@ -1,0 +1,30 @@
+@startuml
+class Task {
+- long id
+- long projectId
+- String name
+- long creationTimestamp
++ long getProjectId()
++ long getCreationTimestamp()
++ long getId()
+- void setId(long)
+- void setProjectId(long)
++ Project getProject()
++ String getName()
+- void setName(String)
+- void setCreationTimestamp(long)
+}
+
+class Project {
+- long id
+- String name
+- int color
++ {static} Project[] getAllProjects()
++ {static} Project getProjectById(long)
++ long getId()
++ String getName()
++ int getColor()
++ String toString()
+}
+Task "0..*" *-- "1" Project : contains
+@enduml
