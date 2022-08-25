@@ -5,7 +5,6 @@ import android.content.Context;
 import com.cleanup.todoc.database.TodocDatabase;
 import com.cleanup.todoc.repositories.ProjectRepository;
 import com.cleanup.todoc.repositories.TaskRepository;
-import com.cleanup.todoc.viewmodel.ViewModelFactory;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

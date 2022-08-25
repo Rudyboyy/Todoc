@@ -14,11 +14,13 @@ import com.cleanup.todoc.model.Task;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = { Project.class, Task.class }, version = 1, exportSchema = false)
+@Database(entities = {Project.class, Task.class}, version = 1, exportSchema = false)
 public abstract class TodocDatabase extends RoomDatabase {
 
     public abstract ProjectDao projectDao();
+
     public abstract TaskDao taskDao();
+
     private static volatile TodocDatabase INSTANCE;
 
     private static final int NUMBER_OF_THREADS = 4;

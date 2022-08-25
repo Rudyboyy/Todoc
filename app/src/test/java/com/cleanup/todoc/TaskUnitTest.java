@@ -1,16 +1,28 @@
 package com.cleanup.todoc;
 
+import com.cleanup.todoc.database.TaskDao;
+import com.cleanup.todoc.database.TodocDatabase;
+import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.repositories.TaskRepository;
+import com.cleanup.todoc.ui.MainActivity;
+import com.cleanup.todoc.ui.TasksAdapter;
+import com.cleanup.todoc.viewmodel.TodocViewModel;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import androidx.lifecycle.LiveData;
 
 /**
  * Unit tests for tasks
@@ -18,6 +30,7 @@ import static org.junit.Assert.assertSame;
  * @author Gaëtan HERFRAY
  */
 public class TaskUnitTest {
+
     @Test
     public void test_projects() {
         final Task task1 = new Task(1, "task 1", new Date().getTime());

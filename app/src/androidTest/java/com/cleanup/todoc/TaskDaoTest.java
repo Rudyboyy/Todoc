@@ -1,17 +1,13 @@
 package com.cleanup.todoc;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import android.content.Context;
-
-import androidx.annotation.NonNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.cleanup.todoc.database.ProjectDao;
-import com.cleanup.todoc.database.TaskDao;
 import com.cleanup.todoc.database.TodocDatabase;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
@@ -28,13 +24,11 @@ import java.util.List;
 public class TaskDaoTest {
 
     private TodocDatabase database;
-    private TaskDao mTaskDao;
-    private ProjectDao mProjectDao;
     private static final long PROJECT_ID = 1;
     private static final Project PROJECT_DEMO = new Project(PROJECT_ID, "Test", 0xFFEADAD1);
-    private static final Task NEW_ITEM_PLACE_TO_VISIT = new Task(PROJECT_ID, "faire les tests", PROJECT_ID);
-    private static final Task NEW_ITEM_IDEA = new Task(PROJECT_ID, "presentation des tests", PROJECT_ID);
-    private static final Task NEW_ITEM_RESTAURANTS = new Task(PROJECT_ID, "execution des tests", PROJECT_ID);
+    private static final Task TASK_DEMO = new Task(PROJECT_ID, "faire les tests", PROJECT_ID);
+    private static final Task TASK_DEMO_2 = new Task(PROJECT_ID, "presentation des tests", PROJECT_ID);
+    private static final Task TASK_DEMO_3 = new Task(PROJECT_ID, "execution des tests", PROJECT_ID);
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -46,10 +40,6 @@ public class TaskDaoTest {
                 TodocDatabase.class)
                 .allowMainThreadQueries()
                 .build();
-        /*Context context = androidx.test.core.app.ApplicationProvider.getApplicationContext();
-        database = Room.inMemoryDatabaseBuilder(context, TodocDatabase.class).build();
-        mTaskDao = database.taskDao();
-        mProjectDao = database.projectDao();*/
     }
 
     @After
@@ -73,18 +63,18 @@ public class TaskDaoTest {
     @Test
     public void insertAndGetTasks() throws InterruptedException {
         this.database.projectDao().createProject(PROJECT_DEMO);
-        this.database.taskDao().insertTask(NEW_ITEM_PLACE_TO_VISIT);
-        this.database.taskDao().insertTask(NEW_ITEM_IDEA);
-        this.database.taskDao().insertTask(NEW_ITEM_RESTAURANTS);
+        this.database.taskDao().insertTask(TASK_DEMO);
+        this.database.taskDao().insertTask(TASK_DEMO_2);
+        this.database.taskDao().insertTask(TASK_DEMO_3);
 
         List<Task> items = LiveDataTestUtil.getValue(this.database.taskDao().getTasks(PROJECT_ID));
-        assertTrue(items.size() == 3);
+        assertEquals(3, items.size());
     }
 
     @Test
     public void insertAndDeleteTask() throws InterruptedException {
         this.database.projectDao().createProject(PROJECT_DEMO);
-        this.database.taskDao().insertTask(NEW_ITEM_PLACE_TO_VISIT);
+        this.database.taskDao().insertTask(TASK_DEMO);
         Task taskAdded = LiveDataTestUtil.getValue(this.database.taskDao().getTasks(PROJECT_ID)).get(0);
         this.database.taskDao().deleteTask(taskAdded.getId());
 

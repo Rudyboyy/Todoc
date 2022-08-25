@@ -24,7 +24,7 @@ import com.cleanup.todoc.injection.Injection;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.viewmodel.TodocViewModel;
-import com.cleanup.todoc.viewmodel.ViewModelFactory;
+import com.cleanup.todoc.injection.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
