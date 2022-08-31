@@ -33,6 +33,7 @@ public class TodocViewModel extends ViewModel {
     public TodocViewModel(TaskRepository taskDataSource, ProjectRepository projectDataSource, Executor executor) {
         this.taskDataSource = taskDataSource;
         this.mProjectRepository = projectDataSource;
+        executor.execute(mProjectRepository::insertDefaultProjects);
         this.executor = executor;
     }
 

@@ -34,8 +34,11 @@ public class TaskUnitTest {
     @Test
     public void test_projects() {
         final Task task1 = new Task(1, "task 1", new Date().getTime());
+        task1.setProject(Project.getProjectById(1));
         final Task task2 = new Task(2, "task 2", new Date().getTime());
+        task2.setProject(Project.getProjectById(2));
         final Task task3 = new Task(3, "task 3", new Date().getTime());
+        task3.setProject(Project.getProjectById(3));
         final Task task4 = new Task(4, "task 4", new Date().getTime());
 
         assertEquals("Projet Tartampion", task1.getProject().getName());

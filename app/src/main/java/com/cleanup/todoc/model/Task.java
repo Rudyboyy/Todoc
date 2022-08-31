@@ -101,16 +101,6 @@ public class Task {
     }
 
     /**
-     * Returns the project associated to the task.
-     *
-     * @return the project associated to the task
-     */
-    @Nullable
-    public Project getProject() {
-        return Project.getProjectById(projectId);
-    }
-
-    /**
      * Returns the name of the task.
      *
      * @return the name of the task
@@ -176,5 +166,16 @@ public class Task {
         public int compare(Task left, Task right) {
             return (int) (left.creationTimestamp - right.creationTimestamp);
         }
+    }
+
+    @Ignore
+    private Project mProject;
+
+    public void setProject(Project project) {
+        mProject = project;
+    }
+
+    public Project getProject() {
+        return mProject;
     }
 }
