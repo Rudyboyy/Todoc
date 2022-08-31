@@ -12,9 +12,11 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.database.ProjectDao;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,6 +30,8 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
      */
     @NonNull
     private List<Task> tasks;
+
+    List<Project> mProjects;
 
     /**
      * The listener for when a task needs to be deleted
@@ -53,6 +57,12 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     @SuppressLint("NotifyDataSetChanged")
     void updateTasks(@NonNull final List<Task> tasks) {
         this.tasks = tasks;
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    void updateProjects(@NonNull final List<Project> projects) {
+        this.mProjects = projects;
         notifyDataSetChanged();
     }
 
@@ -90,7 +100,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
      *
      * @author Gaëtan HERFRAY
      */
-    static class TaskViewHolder extends RecyclerView.ViewHolder {
+    class TaskViewHolder extends RecyclerView.ViewHolder {
         /**
          * The circle icon showing the color of the project
          */
@@ -149,13 +159,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblTaskName.setText(task.getName());
             imgDelete.setTag(task);
 
-            final Project taskProject = task.getProject();
-            if (taskProject != null) {
-                imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
-                lblProjectName.setText(taskProject.getName());
-            } else {
-                imgProject.setVisibility(View.INVISIBLE);
-                lblProjectName.setText("");
+            for (int i = 0; i < mProjects.size(); i++) {
+                if (task.getProjectId() == mProjects.get(i).getId()) {
+                    imgProject.setSupportImageTintList(ColorStateList.valueOf(mProjects.get(i).getColor()));
+                    lblProjectName.setText(mProjects.get(i).getName());
+                }
             }
         }
     }

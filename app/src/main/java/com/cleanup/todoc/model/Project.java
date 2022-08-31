@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.cleanup.todoc.database.ProjectDao;
+
 /**
  * <p>Models for project in which tasks are included.</p>
  *
@@ -50,9 +52,10 @@ public class Project {
      *
      * @return all the projects of the application
      */
+
     @NonNull
     public static Project[] getAllProjects() {
-        return new Project[]{
+        return  new Project[]{
                 new Project(1L, "Projet Tartampion", 0xFFEADAD1),
                 new Project(2L, "Projet Lucidia", 0xFFB4CDBA),
                 new Project(3L, "Projet Circus", 0xFFA3CED2),

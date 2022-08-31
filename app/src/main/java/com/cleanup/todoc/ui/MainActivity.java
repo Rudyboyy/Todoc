@@ -21,10 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.injection.Injection;
+import com.cleanup.todoc.injection.ViewModelFactory;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 import com.cleanup.todoc.viewmodel.TodocViewModel;
-import com.cleanup.todoc.injection.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -107,7 +107,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory(this);
         todocViewModel = new ViewModelProvider(this, mViewModelFactory).get(TodocViewModel.class);
 
-        todocViewModel.getListProjectLiveData().observe(this, projects -> allProjects = projects);
+        todocViewModel.getListProjectLiveData().observe(this, projects -> {
+            allProjects = projects;
+            adapter.updateProjects(allProjects);
+        });
 
         todocViewModel.getListTaskLiveData().observe(this, tasks -> {
             this.tasks = tasks;

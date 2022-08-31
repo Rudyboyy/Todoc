@@ -19,6 +19,11 @@ public class ProjectRepository {
 
     public LiveData<Project> getProjectById(long projectId) { return this.mProjectDao.getProjectById(projectId); }
 
+    public void insertDefaultProjects() {
+        Project.getAllProjects();
+        this.mProjectDao.insertDefaultProject(Project.getAllProjects());
+    }
+
     public void createProject(Project project) {
         mProjectDao.createProject(project);
     }
